@@ -135,20 +135,38 @@ section { padding-block: var(--section); }
   background: var(--bg-alt);
 }
 
-/* ---------- רצועת התמונה, לרוחב מלא ---------- */
+/* ---------- תמונות ---------- */
 
 .media { padding: 0; }
 
-.image-placeholder {
+/* רצועת הגיבור, לרוחב מלא */
+.hero-image {
+  display: block;
   width: 100%;
-  aspect-ratio: 4 / 3;
-  background: var(--placeholder);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  height: 58vw;
+  max-height: 30rem;
+  object-fit: cover;
+}
+
+/* תמונות בתוך רוחב התוכן */
+.media-inset { padding-block: var(--section); }
+
+.media-inset figure {
+  margin: 0;
+}
+
+.media-inset img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.media-inset figcaption {
+  margin-top: 0.85rem;
   color: var(--ink-soft);
-  font-size: 0.9rem;
-  letter-spacing: 0.04em;
+  font-size: 0.95rem;
 }
 
 /* ---------- רשימות ---------- */
@@ -373,7 +391,10 @@ button:hover {
 
   .site-header { padding-block: 3.5rem 3rem; }
 
-  .image-placeholder { aspect-ratio: 21 / 9; }
+  .hero-image {
+    height: 32rem;
+    max-height: none;
+  }
 
   /* שתי עמודות: טקסט מול רשימה */
   .split {
