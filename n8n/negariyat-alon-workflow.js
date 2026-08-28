@@ -28,6 +28,30 @@ const createSheet = node({
   output: [{ spreadsheetId: '1AbCdEfGhIjKlMnOpQrStUvWxYz', spreadsheetUrl: 'https://docs.google.com/spreadsheets/d/1AbCdEfGhIjKlMnOpQrStUvWxYz/edit' }]
 });
 
+const buildHeaderRow = node({
+  type: 'n8n-nodes-base.set',
+  version: 3.5,
+  config: {
+    name: 'Build Header Row',
+    position: [-20, 240],
+    parameters: {
+      mode: 'manual',
+      includeOtherFields: false,
+      assignments: {
+        assignments: [
+          { id: 'h0', name: 'sheetId', value: expr('{{ $json.spreadsheetId }}'), type: 'string' },
+          { id: 'h1', name: 'תאריך', value: 'תאריך', type: 'string' },
+          { id: 'h2', name: 'שם', value: 'שם', type: 'string' },
+          { id: 'h3', name: 'טלפון', value: 'טלפון', type: 'string' },
+          { id: 'h4', name: 'מייל', value: 'מייל', type: 'string' },
+          { id: 'h5', name: 'הודעה', value: 'הודעה', type: 'string' }
+        ]
+      }
+    }
+  },
+  output: [{ sheetId: '1Ok60WB0IqGLaEk0YXhCoZTxV_-w2Q4qsoBzqNyY1NuA', 'תאריך': 'תאריך', 'שם': 'שם', 'טלפון': 'טלפון', 'מייל': 'מייל', 'הודעה': 'הודעה' }]
+});
+
 const addHeaders = node({
   type: 'n8n-nodes-base.googleSheets',
   version: 4.7,
@@ -37,26 +61,10 @@ const addHeaders = node({
     parameters: {
       resource: 'sheet',
       operation: 'append',
-      documentId: { __rl: true, mode: 'id', value: expr('{{ $json.spreadsheetId }}') },
+      documentId: { __rl: true, mode: 'id', value: expr('{{ $json.sheetId }}') },
       sheetName: { __rl: true, mode: 'name', value: 'Leads' },
-      columns: {
-        mappingMode: 'defineBelow',
-        value: {
-          'תאריך': 'תאריך',
-          'שם': 'שם',
-          'טלפון': 'טלפון',
-          'מייל': 'מייל',
-          'הודעה': 'הודעה'
-        },
-        schema: [
-          { id: 'תאריך', displayName: 'תאריך', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true },
-          { id: 'שם', displayName: 'שם', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true },
-          { id: 'טלפון', displayName: 'טלפון', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true },
-          { id: 'מייל', displayName: 'מייל', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true },
-          { id: 'הודעה', displayName: 'הודעה', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true }
-        ]
-      },
-      options: { cellFormat: 'USER_ENTERED', useAppend: true }
+      columns: { mappingMode: 'autoMapInputData', value: {}, matchingColumns: [], schema: [] },
+      options: { cellFormat: 'USER_ENTERED', useAppend: true, handlingExtraData: 'ignoreIt' }
     },
     credentials: { googleSheetsOAuth2Api: { id: 't8zScNvSSUJB4V2J', name: 'osherfocusai@gmail.com' } }
   },
@@ -65,7 +73,7 @@ const addHeaders = node({
 
 const setupNote = sticky(
   '## שלב הכנה, מריצים פעם אחת\n\nלוחצים Execute על הטריגר הידני כדי ליצור את הגיליון ואת שורת הכותרות.\n\nאחרי היצירה מעתיקים את spreadsheetId מהפלט ובוחרים את הגיליון בנוד Save Lead To Sheet.',
-  [setupTrigger, createSheet, addHeaders],
+  [setupTrigger, createSheet, buildHeaderRow, addHeaders],
   { color: 3 }
 );
 
@@ -81,10 +89,10 @@ const formWebhook = trigger({
       responseMode: 'lastNode',
       responseData: 'firstEntryJson',
       options: {
-        allowedOrigins: '*',
+        allowedOrigins: 'https://negariyat-alon.vercel.app',
         responseHeaders: {
           entries: [
-            { name: 'Access-Control-Allow-Origin', value: '*' },
+            { name: 'Access-Control-Allow-Origin', value: 'https://negariyat-alon.vercel.app' },
             { name: 'Access-Control-Allow-Headers', value: 'Content-Type' }
           ]
         }
@@ -273,7 +281,7 @@ const confirmLead = node({
 });
 
 const webhookNote = sticky(
-  '## זרימת הטופס\n\nהוובהוק מקבל POST מהטופס באתר, מנרמל את השדות, שומר שורה בגיליון, ואז שולח שני מיילים.\n\nAllowed Origins מוגדר לכוכבית לצורכי פיתוח. לפני עלייה לאוויר מחליפים בדומיין האמיתי מ-Vercel.\n\nשני נודי הגימייל מוגדרים continueRegularOutput, כדי שכשל באחד לא יחסום את השני.',
+  '## זרימת הטופס\n\nהוובהוק מקבל POST מהטופס באתר, מנרמל את השדות, שומר שורה בגיליון, ואז שולח שני מיילים.\n\nAllowed Origins מוגבל לדומיין negariyat-alon.vercel.app בלבד.\n\nשני נודי הגימייל מוגדרים continueRegularOutput, כדי שכשל באחד לא יחסום את השני.',
   [formWebhook, normalize, mapColumns, saveLead],
   { color: 4 }
 );
@@ -287,6 +295,7 @@ const mailNote = sticky(
 export default workflow('negariyat-alon', 'Negariyat Alon')
   .add(setupTrigger)
   .to(createSheet)
+  .to(buildHeaderRow)
   .to(addHeaders)
   .add(formWebhook)
   .to(normalize)
