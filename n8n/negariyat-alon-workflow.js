@@ -244,7 +244,7 @@ const confirmLead = node({
         '</td></tr>' +
         '<tr><td style="padding:14px 32px 4px;font-size:16px;line-height:1.85;color:#2f2f2b;text-align:center;">' +
         '<p style="margin:0 0 14px;">שלום {{ $("Normalize Form Data").item.json.name }},</p>' +
-        '<p style="margin:0 0 14px;">הפנייה שלכם התקבלה ואנחנו כבר עוברים עליה. נחזור אליכם בהקדם עם ייעוץ ראשוני והצעת מחיר.</p>' +
+        '<p style="margin:0 0 14px;">הפנייה שלכם התקבלה ואנחנו כבר עוברים עליה. אנחנו חוזרים לכל פנייה תוך יום עסקים אחד, עם ייעוץ ראשוני והצעת מחיר.</p>' +
         '<p style="margin:0 0 6px;color:#63615a;font-size:15px;">ההודעה שלכם:</p>' +
         '<div style="background:#f0eee9;padding:16px 18px;font-size:15px;line-height:1.75;text-align:center;">{{ $("Normalize Form Data").item.json.message }}</div>' +
         '</td></tr>' +
@@ -261,7 +261,7 @@ const confirmLead = node({
         '<tr><td style="padding:9px 0;text-align:center;">תקבלו סקיצה עם הצעת מחיר</td></tr>' +
         '<tr><td style="padding:2px 0;text-align:center;line-height:1;">' +
         '<span style="color:#b99b6b;font-size:17px;">&#8595;</span></td></tr>' +
-        '<tr><td style="padding:9px 0;text-align:center;">אחרי אישור, הייצור לוקח שלושה עד שישה שבועות</td></tr>' +
+        '<tr><td style="padding:9px 0;text-align:center;">אחרי אישור, הייצור לוקח ארבעה עד שמונה שבועות</td></tr>' +
         '<tr><td style="padding:2px 0;text-align:center;line-height:1;">' +
         '<span style="color:#b99b6b;font-size:17px;">&#8595;</span></td></tr>' +
         '<tr><td style="padding:9px 0;text-align:center;">אלון מרכיב אצלכם, וזה כלול במחיר</td></tr>' +
