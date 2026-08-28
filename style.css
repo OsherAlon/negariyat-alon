@@ -34,7 +34,7 @@ body {
   background: var(--bg);
   color: var(--ink);
   /* משפחה אחת לאורך כל העמוד */
-  font-family: "Assistant", "Heebo", "Arial Hebrew", Arial, sans-serif;
+  font-family: "Tinos", "Times New Roman", "David", serif;
   font-size: 1.0625rem;
   font-weight: 400;
   line-height: 1.9;
