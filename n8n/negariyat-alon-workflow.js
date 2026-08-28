@@ -1,6 +1,6 @@
 import { workflow, node, trigger, sticky, expr } from '@n8n/workflow-sdk';
 
-const HERO = 'https://res.cloudinary.com/obg18fbb/image/upload/f_auto,q_auto,c_fill,g_auto,w_1200,h_500/v1787937558/dining-table-walnut.jpg';
+const HERO = 'https://res.cloudinary.com/obg18fbb/image/upload/f_auto,q_auto,c_fill,g_north,w_1200,h_470/v1787937558/dining-table-walnut.jpg';
 const OWNER = 'osherfocusai@gmail.com';
 
 const setupTrigger = trigger({
@@ -234,20 +234,29 @@ const confirmLead = node({
         '<div style="font-size:23px;color:#2f2f2b;">קיבלתי את הפנייה</div>' +
         '<div style="width:60px;height:1px;background:#b99b6b;margin:14px auto 0;"></div>' +
         '</td></tr>' +
-        '<tr><td style="padding:14px 32px 4px;font-size:16px;line-height:1.85;color:#2f2f2b;">' +
+        '<tr><td style="padding:14px 32px 4px;font-size:16px;line-height:1.85;color:#2f2f2b;text-align:center;">' +
         '<p style="margin:0 0 14px;">שלום {{ $("Normalize Form Data").item.json.name }},</p>' +
-        '<p style="margin:0 0 14px;">הפנייה שלך הגיעה אליי ואחזור אליך בהקדם. אני עובד לבד, אז התשובה מגיעה ממני ישירות.</p>' +
-        '<p style="margin:0 0 6px;color:#63615a;font-size:15px;">זה מה שנשלח:</p>' +
-        '<div style="background:#f0eee9;padding:16px 18px;font-size:15px;line-height:1.75;">{{ $("Normalize Form Data").item.json.message }}</div>' +
+        '<p style="margin:0 0 14px;">הפנייה שלכם התקבלה ואנחנו כבר עוברים עליה. נחזור אליכם בהקדם עם ייעוץ ראשוני והצעת מחיר.</p>' +
+        '<p style="margin:0 0 6px;color:#63615a;font-size:15px;">ההודעה שלכם:</p>' +
+        '<div style="background:#f0eee9;padding:16px 18px;font-size:15px;line-height:1.75;text-align:center;">{{ $("Normalize Form Data").item.json.message }}</div>' +
         '</td></tr>' +
-        '<tr><td style="padding:24px 32px 6px;">' +
-        '<div style="font-size:17px;color:#2f2f2b;padding-bottom:12px;">איך זה ממשיך</div>' +
-        '<table role="presentation" cellpadding="0" cellspacing="0" border="0" width="100%" style="font-size:15px;color:#2f2f2b;">' +
-        '<tr><td style="padding:8px 0;border-bottom:1px solid #ddd8ce;">שיחת טלפון ראשונה, להבין מה צריך</td></tr>' +
-        '<tr><td style="padding:8px 0;border-bottom:1px solid #ddd8ce;">אני מגיע לבית ומודד</td></tr>' +
-        '<tr><td style="padding:8px 0;border-bottom:1px solid #ddd8ce;">שולח סקיצה עם הצעת מחיר</td></tr>' +
-        '<tr><td style="padding:8px 0;border-bottom:1px solid #ddd8ce;">אחרי אישור, הייצור לוקח שלושה עד שישה שבועות</td></tr>' +
-        '<tr><td style="padding:8px 0;">אני מרכיב במקום, וזה כלול במחיר</td></tr>' +
+        '<tr><td style="padding:26px 32px 6px;text-align:center;">' +
+        '<div style="font-size:19px;color:#2f2f2b;">מה השלב הבא?</div>' +
+        '<div style="width:60px;height:1px;background:#b99b6b;margin:12px auto 20px;"></div>' +
+        '<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin:0 auto;font-size:15px;color:#2f2f2b;">' +
+        '<tr><td style="padding:9px 0;text-align:center;">שיחת טלפון ראשונה, להבין מה צריך</td></tr>' +
+        '<tr><td style="padding:2px 0;text-align:center;line-height:1;">' +
+        '<span style="color:#b99b6b;font-size:17px;">&#8595;</span></td></tr>' +
+        '<tr><td style="padding:9px 0;text-align:center;">אלון מגיע אליכם הביתה ומודד</td></tr>' +
+        '<tr><td style="padding:2px 0;text-align:center;line-height:1;">' +
+        '<span style="color:#b99b6b;font-size:17px;">&#8595;</span></td></tr>' +
+        '<tr><td style="padding:9px 0;text-align:center;">תקבלו סקיצה עם הצעת מחיר</td></tr>' +
+        '<tr><td style="padding:2px 0;text-align:center;line-height:1;">' +
+        '<span style="color:#b99b6b;font-size:17px;">&#8595;</span></td></tr>' +
+        '<tr><td style="padding:9px 0;text-align:center;">אחרי אישור, הייצור לוקח שלושה עד שישה שבועות</td></tr>' +
+        '<tr><td style="padding:2px 0;text-align:center;line-height:1;">' +
+        '<span style="color:#b99b6b;font-size:17px;">&#8595;</span></td></tr>' +
+        '<tr><td style="padding:9px 0;text-align:center;">אלון מרכיב אצלכם, וזה כלול במחיר</td></tr>' +
         '</table></td></tr>' +
         '<tr><td style="padding:26px 32px 30px;border-top:1px solid #ddd8ce;text-align:center;font-size:15px;line-height:1.9;color:#63615a;">' +
         '<div style="color:#2f2f2b;font-size:16px;padding-bottom:6px;">נגריית אלון</div>' +
