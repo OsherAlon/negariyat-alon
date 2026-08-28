@@ -21,7 +21,7 @@ const createSheet = node({
       operation: 'create',
       title: 'Negariyat Alon - Leads',
       sheetsUi: { sheetValues: [{ title: 'Leads', hidden: false }] },
-      options: { locale: 'he_IL' }
+      options: {}
     },
     credentials: { googleSheetsOAuth2Api: { id: 't8zScNvSSUJB4V2J', name: 'osherfocusai@gmail.com' } }
   },
@@ -117,6 +117,29 @@ const normalize = node({
   output: [{ name: 'ישראל ישראלי', phone: '0521234567', email: 'test@example.com', message: 'מעוניין בשולחן אוכל לשישה', submittedAt: '28/08/2026 20:45' }]
 });
 
+const mapColumns = node({
+  type: 'n8n-nodes-base.set',
+  version: 3.5,
+  config: {
+    name: 'Map To Sheet Columns',
+    position: [-20, 620],
+    parameters: {
+      mode: 'manual',
+      includeOtherFields: false,
+      assignments: {
+        assignments: [
+          { id: 'c1', name: 'תאריך', value: expr('{{ $json.submittedAt }}'), type: 'string' },
+          { id: 'c2', name: 'שם', value: expr('{{ $json.name }}'), type: 'string' },
+          { id: 'c3', name: 'טלפון', value: expr('{{ $json.phone }}'), type: 'string' },
+          { id: 'c4', name: 'מייל', value: expr('{{ $json.email }}'), type: 'string' },
+          { id: 'c5', name: 'הודעה', value: expr('{{ $json.message }}'), type: 'string' }
+        ]
+      }
+    }
+  },
+  output: [{ 'תאריך': '28/08/2026 20:50', 'שם': 'אושר', 'טלפון': '0526931610', 'מייל': 'osherfocusai@gmail.com', 'הודעה': 'ניסיון' }]
+});
+
 const saveLead = node({
   type: 'n8n-nodes-base.googleSheets',
   version: 4.7,
@@ -126,30 +149,14 @@ const saveLead = node({
     parameters: {
       resource: 'sheet',
       operation: 'append',
-      documentId: { __rl: true, mode: 'list', value: '', cachedResultName: 'Negariyat Alon - Leads' },
+      documentId: { __rl: true, mode: 'id', value: '1Ok60WB0IqGLaEk0YXhCoZTxV_-w2Q4qsoBzqNyY1NuA', cachedResultName: 'Negariyat Alon - Leads' },
       sheetName: { __rl: true, mode: 'name', value: 'Leads' },
-      columns: {
-        mappingMode: 'defineBelow',
-        value: {
-          'תאריך': expr('{{ $json.submittedAt }}'),
-          'שם': expr('{{ $json.name }}'),
-          'טלפון': expr('{{ $json.phone }}'),
-          'מייל': expr('{{ $json.email }}'),
-          'הודעה': expr('{{ $json.message }}')
-        },
-        schema: [
-          { id: 'תאריך', displayName: 'תאריך', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true },
-          { id: 'שם', displayName: 'שם', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true },
-          { id: 'טלפון', displayName: 'טלפון', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true },
-          { id: 'מייל', displayName: 'מייל', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true },
-          { id: 'הודעה', displayName: 'הודעה', required: false, defaultMatch: false, display: true, type: 'string', canBeUsedToMatch: true }
-        ]
-      },
-      options: { cellFormat: 'USER_ENTERED', useAppend: true }
+      columns: { mappingMode: 'autoMapInputData', value: {}, matchingColumns: [], schema: [] },
+      options: { cellFormat: 'USER_ENTERED', useAppend: true, handlingExtraData: 'insertInNewColumn' }
     },
     credentials: { googleSheetsOAuth2Api: { id: 't8zScNvSSUJB4V2J', name: 'osherfocusai@gmail.com' } }
   },
-  output: [{ 'תאריך': '28/08/2026 20:45', 'שם': 'ישראל ישראלי', 'טלפון': '0521234567', 'מייל': 'test@example.com', 'הודעה': 'מעוניין בשולחן אוכל לשישה' }]
+  output: [{ 'תאריך': '28/08/2026 20:50', 'שם': 'ישראל ישראלי', 'טלפון': '0521234567', 'מייל': 'test@example.com', 'הודעה': 'מעוניין בשולחן אוכל לשישה' }]
 });
 
 const notifyOwner = node({
@@ -258,7 +265,7 @@ const confirmLead = node({
 
 const webhookNote = sticky(
   '## זרימת הטופס\n\nהוובהוק מקבל POST מהטופס באתר, מנרמל את השדות, שומר שורה בגיליון, ואז שולח שני מיילים.\n\nAllowed Origins מוגדר לכוכבית לצורכי פיתוח. לפני עלייה לאוויר מחליפים בדומיין האמיתי מ-Vercel.\n\nשני נודי הגימייל מוגדרים continueRegularOutput, כדי שכשל באחד לא יחסום את השני.',
-  [formWebhook, normalize, saveLead],
+  [formWebhook, normalize, mapColumns, saveLead],
   { color: 4 }
 );
 
@@ -274,6 +281,7 @@ export default workflow('negariyat-alon', 'Negariyat Alon')
   .to(addHeaders)
   .add(formWebhook)
   .to(normalize)
+  .to(mapColumns)
   .to(saveLead)
   .to(notifyOwner)
   .add(saveLead)
