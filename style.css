@@ -27,7 +27,16 @@
 *::before,
 *::after { box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  /* גובה סרגל הניווט, כדי שהעוגנים לא ייחתכו */
+  scroll-padding-top: 4.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
 
 body {
   margin: 0;
@@ -103,6 +112,57 @@ a:hover { color: var(--accent-dark); }
   outline-offset: 3px;
 }
 
+/* ---------- סרגל ניווט ---------- */
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg-alt);
+  border-bottom: 1px solid var(--line);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  min-height: 3.75rem;
+  flex-wrap: wrap;
+}
+
+.nav-brand {
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.nav-brand span { color: var(--gold); }
+
+.nav-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.5rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 1rem;
+  padding-block: 0.35rem;
+  border-bottom: 1px solid transparent;
+}
+
+.nav-links a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--gold);
+}
+
 /* ---------- כותרת עליונה ---------- */
 
 .site-header {
@@ -112,11 +172,11 @@ a:hover { color: var(--accent-dark); }
 
 .wordmark {
   display: inline-block;
-  font-size: 1.4rem;
-  letter-spacing: 0.06em;
+  font-size: 2.1rem;
+  letter-spacing: 0.08em;
   color: var(--ink);
-  margin: 0 0 1.75rem;
-  padding-bottom: 0.6rem;
+  margin: 0 0 2rem;
+  padding-bottom: 0.85rem;
   border-bottom: 1px solid var(--gold);
 }
 
@@ -278,6 +338,44 @@ textarea {
 
 textarea { resize: vertical; }
 
+.req {
+  color: var(--gold);
+  font-size: 0.95em;
+}
+
+.form-note {
+  margin: -0.5rem 0 1rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
+/* שדה שלא מולא, מסומן בקו אדום */
+input.is-invalid,
+textarea.is-invalid {
+  border-color: #a4342b;
+}
+
+.form-error,
+.form-success {
+  margin: 0.25rem 0 0;
+  padding: 0.85rem 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  max-width: var(--measure);
+}
+
+.form-error {
+  color: #8f2c24;
+  background: #fbeceb;
+  border: 1px solid #e8c3bf;
+}
+
+.form-success {
+  color: #40532f;
+  background: #eef2e8;
+  border: 1px solid #ccd8bf;
+}
+
 /* ---------- כפתורים ---------- */
 
 .btn,
@@ -390,6 +488,14 @@ button:hover {
   .lead { font-size: 1.3rem; }
 
   .site-header { padding-block: 3.5rem 3rem; }
+
+  .nav-inner { min-height: 4.5rem; }
+
+  .nav-brand { font-size: 1.35rem; }
+
+  .nav-links { gap: 2.25rem; }
+
+  .wordmark { font-size: 2.6rem; }
 
   .hero-image {
     height: 32rem;
